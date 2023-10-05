@@ -1,16 +1,34 @@
-#Task 2.1
+#Task 2.1,2.2,2.3,2.4,2.5
 # Load the required libraries
 library(dplyr)
 
 # Load the CSV file
 data <- read.csv("customer_shopping_data.csv")
 
-# Define the models
-model1 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^24) + I(price^14) + 1, data)
-model2 <- lm(quantity ~ I(price^4) + I(price^13) + I(price^34) + 1, data)
-model3 <- lm(quantity ~ I(price^33) + I(price^34) + 1, data)
-model4 <- lm(quantity ~ I(price^2) + I(price^13) + I(price^34) + 1, data)
-model5 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^34) + 1, data)
+# Convert invoice_date to a date-time format
+data$invoice_date <- as.Date(data$invoice_date)
+
+# Calculate the number of days since a reference date
+data$days_since_reference <- as.numeric(data$invoice_date - min(data$invoice_date))
+
+# Model 1
+model1 <- lm(quantity ~ I(price^4) + I(age^4) + I(quantity^4) + I(price^4) + I(age^4) + as.factor(gender) 
+             + as.factor(category) + as.factor(shopping_mall) + I(days_since_reference) + 1, data=data)
+# Model 2
+model2 <- lm(quantity ~ I(price^4) + I(age^3) + I(quantity^4) + I(price^4) + as.factor(gender) 
+             + as.factor(category) + as.factor(shopping_mall) + I(days_since_reference^4) + 1, data=data)
+# Model 3
+model3 <- lm(quantity ~ I(age^3) + I(quantity^4) + I(age^4) + as.factor(gender) + as.factor(category) 
+             + as.factor(shopping_mall) + I(days_since_reference) + 1, data=data)
+# Model 4
+model4 <- lm(quantity ~ I(price^2) + I(age^3) + I(quantity^4) + I(age^4) + as.factor(gender) 
+             + as.factor(category) + as.factor(shopping_mall) + I(days_since_reference) + 1, data=data)
+# Model 5
+model5 <- lm(quantity ~ I(price^4) + I(age^4) + I(quantity^4) + I(price^4) + as.factor(gender) 
+             + as.factor(category) + as.factor(shopping_mall) + I(days_since_reference^4) + 1, data=data)
+
+
+
 
 # Extract theta hat (model coefficients) for each model
 theta_hat_model1 <- coef(model1)
@@ -33,19 +51,6 @@ coefficients_df <- data.frame(
 # Print the coefficients data frame
 print(coefficients_df)
 
-#Task 2.2
-# Load the required libraries
-library(dplyr)
-
-# Load the CSV file
-data <- read.csv("customer_shopping_data.csv")
-# Define the models
-model1 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^24) + I(price^14) + 1, data)
-model2 <- lm(quantity ~ I(price^4) + I(price^13) + I(price^34) + 1, data)
-model3 <- lm(quantity ~ I(price^33) + I(price^34) + 1, data)
-model4 <- lm(quantity ~ I(price^2) + I(price^13) + I(price^34) + 1, data)
-model5 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^34) + 1, data)
-
 # Calculate RSS for each model
 rss_model1 <- sum(model1$residuals^2)
 rss_model2 <- sum(model2$residuals^2)
@@ -61,22 +66,6 @@ rss_df <- data.frame(
 
 # Print the RSS data frame
 print(rss_df)
-
-#Task 2.3
-#Task 2.3 -log-likelihood-age
-# Load the required libraries
-library(dplyr)
-
-# Load the CSV file
-data <- read.csv("customer_shopping_data.csv")
-
-# Define the models
-model1 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^24) + I(price^14) + 1, data)
-model2 <- lm(quantity ~ I(price^4) + I(price^13) + I(price^34) + 1, data)
-model3 <- lm(quantity ~ I(price^33) + I(price^34) + 1, data)
-model4 <- lm(quantity ~ I(price^2) + I(price^13) + I(price^34) + 1, data)
-model5 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^34) + 1, data)
-
 
 # Function to compute log-likelihood
 log_likelihood <- function(model) {
@@ -102,21 +91,6 @@ log_lik_df <- data.frame(
 
 # Print the log-likelihood data frame
 print(log_lik_df)
-
-#Task 2.4 --BIC- AIC--
-# Load the required libraries
-library(dplyr)
-
-# Load the CSV file
-data <- read.csv("customer_shopping_data.csv")
-
-# Define the models
-model1 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^24) + I(price^14) + 1, data)
-model2 <- lm(quantity ~ I(price^4) + I(price^13) + I(price^34) + 1, data)
-model3 <- lm(quantity ~ I(price^33) + I(price^34) + 1, data)
-model4 <- lm(quantity ~ I(price^2) + I(price^13) + I(price^34) + 1, data)
-model5 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^34) + 1, data)
-
 
 # Function to compute AIC
 compute_aic <- function(model) {
@@ -159,19 +133,6 @@ aic_bic_df <- data.frame(
 # Print the AIC and BIC data frame
 print(aic_bic_df)
 
-#Task 2.5 QQ plots
-# Load the required libraries
-library(dplyr)
-
-# Load the CSV file
-data <- read.csv("customer_shopping_data.csv")
-
-# Define the models
-model1 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^24) + I(price^14) + 1, data)
-model2 <- lm(quantity ~ I(price^4) + I(price^13) + I(price^34) + 1, data)
-model3 <- lm(quantity ~ I(price^33) + I(price^34) + 1, data)
-model4 <- lm(quantity ~ I(price^2) + I(price^13) + I(price^34) + 1, data)
-model5 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^34) + 1, data)
 # Function to compute log-likelihood
 compute_log_likelihood <- function(model) {
   residuals <- residuals(model)
@@ -241,19 +202,6 @@ create_qq_plot(model3, "Model 3")
 create_qq_plot(model4, "Model 4")
 create_qq_plot(model5, "Model 5")
 
-#Task 2.6--Analysing the Model
-# Load the required libraries
-library(dplyr)
-
-# Load the CSV file
-data <- read.csv("customer_shopping_data.csv")
-
-# Define the models
-model1 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^24) + I(price^14) + 1, data)
-model2 <- lm(quantity ~ I(price^4) + I(price^13) + I(price^34) + 1, data)
-model3 <- lm(quantity ~ I(price^33) + I(price^34) + 1, data)
-model4 <- lm(quantity ~ I(price^2) + I(price^13) + I(price^34) + 1, data)
-model5 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^34) + 1, data)
 # Function to calculate QQ plot statistics
 calculate_qq_stats <- function(model) {
   residuals <- residuals(model)
@@ -280,177 +228,111 @@ qq_stats <- data.frame(
 # Display QQ plot statistics
 print(qq_stats)
 
-
-# Display QQ plot statistics
-print(qq_stats)
-
 #Task 2.7 train test split -Model evaluation:
-# Load necessary libraries
-library(caret)
-library(dplyr)
-
-# Split the data into training (70%) and testing (30%) sets
-set.seed(123)  # For reproducibility
-split_ratio <- 0.7
-index <- createDataPartition(data$quantity, p = split_ratio, list = FALSE)
-train_data <- data[index, ]
-test_data <- data[-index, ]
-
-# Fit Model 4 using the training dataset
-model4 <- lm(quantity ~ I(price^2) + I(price^13) + I(price^34) + 1, data = train_data)
-
-# Summarize the model
-summary(model4)
-
-# Predict on the testing dataset
-test_predictions <- predict(model4, newdata = test_data)
-
-# Evaluate the model's performance (e.g., RMSE)
-rmse <- sqrt(mean((test_predictions - test_data$quantity)^2))
-print(paste("Root Mean Squared Error (RMSE):", rmse))
-
-#Task 2.8 -- 95% confidence Interval Plot
-# Load necessary libraries
-library(caret)
-library(dplyr)
-
-# Split the data into training (70%) and testing (30%) sets
-set.seed(123)  # For reproducibility
-split_ratio <- 0.7
-index <- createDataPartition(data$quantity, p = split_ratio, list = FALSE)
-train_data <- data[index, ]
-test_data <- data[-index, ]
-
-# Fit Model 4 using the training dataset
-model4 <- lm(quantity ~ I(price^2) + I(price^13) + I(price^34) + 1, data = train_data)
-
-# Summarize the model
-summary(model4)
-
-# Predict on the testing dataset
-test_predictions <- predict(model4, newdata = test_data)
-
-# Evaluate the model's performance (e.g., RMSE)
-rmse <- sqrt(mean((test_predictions - test_data$quantity)^2))
-print(paste("Root Mean Squared Error (RMSE):", rmse))
-
-
-
-# Calculate 95% confidence intervals for predictions
-confidence_intervals <- predict(model4, newdata = test_data, interval = "confidence")
-
-# Create a data frame with predictions and confidence intervals
-predictions_df <- data.frame(
-  price = test_data$price,
-  quantity = test_data$quantity,
-  Predicted = test_predictions,
-  Lower_CI = confidence_intervals[, "lwr"],
-  Upper_CI = confidence_intervals[, "upr"]
-)
-
-# Plot the data points, model predictions, and confidence intervals
+# Load the necessary libraries
+# Load the necessary libraries
 library(ggplot2)
+library(dplyr)
 
-ggplot(predictions_df, aes(x = price, y = quantity)) +
-  geom_point() +  # Data points
-  geom_line(aes(y = Predicted), color = "blue") +  # Model predictions
-  geom_errorbar(aes(ymin = Lower_CI, ymax = Upper_CI), width = 0.1, color = "red") +  # Confidence intervals
-  labs(x = "Price", y = "Quantity") +
+# Split the data into training (70%) and testing (30%)
+set.seed(123)  # Set a random seed for reproducibility
+split_ratio <- 0.7
+num_samples <- nrow(data)
+num_train <- round(split_ratio * num_samples)
+train_indices <- sample(1:num_samples, num_train)
+train_data <- data[train_indices, ]
+test_data <- data[-train_indices, ]
+
+# Define the model
+model4 <- lm(quantity ~ I(price^2) + I(age^3) + I(quantity^4) + I(age^4) + 
+               as.factor(gender) + as.factor(category) + as.factor(shopping_mall) + 
+               I(days_since_reference) + 1, data = train_data)
+
+# Make predictions on the testing data
+predictions <- predict(model4, newdata = test_data, interval = "prediction", level = 0.95)
+
+# Extract prediction, lower, and upper confidence interval bounds
+predicted_values <- predictions[, 1]
+lower_bound <- predictions[, "lwr"]
+upper_bound <- predictions[, "upr"]
+
+# Calculate mean and standard deviation for normal distribution curve
+mean_predicted <- mean(predicted_values)
+sd_predicted <- sd(predicted_values)
+
+# Create a data frame for plotting the normal distribution curve
+x_values <- seq(mean_predicted - 3 * sd_predicted, mean_predicted + 3 * sd_predicted, length.out = 100)
+y_values <- dnorm(x_values, mean = mean_predicted, sd = sd_predicted)
+plot_data <- data.frame(x = x_values, y = y_values)
+
+# Create a plot of the normal distribution curve
+ggplot(plot_data, aes(x = x, y = y)) +
+  geom_line(color = "blue", size = 1) +
+  labs(title = "Normal Distribution Curve of 95% Confidence Interval (Model 4)",
+       x = "Quantity", y = "Density") +
+  theme_minimal()
+
+#TASK 2.7
+
+# Load the necessary libraries
+library(ggplot2)
+library(dplyr)
+
+# Split the data into training (70%) and testing (30%)
+set.seed(123)  # Set a random seed for reproducibility
+split_ratio <- 0.7
+num_samples <- nrow(data)
+num_train <- round(split_ratio * num_samples)
+train_indices <- sample(1:num_samples, num_train)
+train_data <- data[train_indices, ]
+test_data <- data[-train_indices, ]
+
+# Define the model
+model4 <- lm(quantity ~ I(price^2) + I(age^3) + I(quantity^4) + I(age^4) + 
+               as.factor(gender) + as.factor(category) + as.factor(shopping_mall) + 
+               I(days_since_reference) + 1, data = train_data)
+
+# Make predictions on the testing data
+predictions <- predict(model4, newdata = test_data, interval = "prediction", level = 0.95)
+
+# Extract prediction, lower, and upper confidence interval bounds
+predicted_values <- predictions[, 1]
+lower_bound <- predictions[, "lwr"]
+upper_bound <- predictions[, "upr"]
+
+# Create a data frame for plotting
+plot_data <- data.frame(x = 1:nrow(test_data), y = test_data$quantity,
+                        prediction = predicted_values, lower = lower_bound, upper = upper_bound)
+
+# Create a plot with error bars
+ggplot(plot_data, aes(x = x, y = prediction)) +
+  geom_line(color = "blue", size = 1) +
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2, color = "red", size = 0.7) +
+  geom_point(aes(x = x, y = y), size = 3, color = "green") +
+  labs(title = "Model 4 Predictions with 95% Confidence Intervals",
+       x = "Sample Index", y = "Quantity") +
   theme_minimal() +
-  ggtitle("Model 4 Predictions with 95% Confidence Intervals ") +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(legend.position = "top") +
+  scale_y_continuous(breaks = seq(0, 200, by = 20)) +
+  theme(panel.grid.major = element_line(color = "gray", linetype = "dashed", size = 0.5))
 
 #Task 3 --parameters setup
 
+
+#Task 3.1 --Posterior Distribution histogram:
 # Load the required libraries
 library(dplyr)
 
 # Load the CSV file
 data <- read.csv("customer_shopping_data.csv")
+# Convert invoice_date to a date-time format
+data$invoice_date <- as.Date(data$invoice_date)
 
-# Define the models
-model1 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^24) + I(price^14) + 1, data)
-model2 <- lm(quantity ~ I(price^4) + I(price^13) + I(price^34) + 1, data)
-model3 <- lm(quantity ~ I(price^33) + I(price^34) + 1, data)
-model4 <- lm(quantity ~ I(price^2) + I(price^13) + I(price^34) + 1, data)
-model5 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^34) + 1, data)
-# Function to compute log-likelihood
-compute_log_likelihood <- function(model) {
-  residuals <- residuals(model)
-  n <- length(residuals)
-  variance <- var(residuals)
-  log_lik <- -0.5 * n * log(2 * pi) - 0.5 * n * log(variance) - 0.5 * sum((residuals^2) / variance)
-  return(log_lik)
-}
-
-# Function to compute AIC
-compute_aic <- function(model) {
-  n <- length(model$residuals)
-  k <- length(model$coefficients)
-  rss <- sum(model$residuals^2)
-  aic <- n * log(rss / n) + 2 * k
-  return(aic)
-}
-
-# Function to compute BIC
-compute_bic <- function(model) {
-  n <- length(model$residuals)
-  k <- length(model$coefficients)
-  rss <- sum(model$residuals^2)
-  bic <- n * log(rss / n) + k * log(n)
-  return(bic)
-}
-
-# Function to create and display Q-Q plots
-create_qq_plot <- function(model, model_name) {
-  residuals <- residuals(model)
-  qqnorm(residuals, main = paste("Q-Q Plot for", model_name, "Residuals"))
-  qqline(residuals)
-}
-
-# Compute RSS, log-likelihood, AIC, BIC for each model
-rss_model1 <- sum(model1$residuals^2)
-rss_model2 <- sum(model2$residuals^2)
-rss_model3 <- sum(model3$residuals^2)
-rss_model4 <- sum(model4$residuals^2)
-rss_model5 <- sum(model5$residuals^2)
-
-loglik_model1 <- compute_log_likelihood(model1)
-loglik_model2 <- compute_log_likelihood(model2)
-loglik_model3 <- compute_log_likelihood(model3)
-loglik_model4 <- compute_log_likelihood(model4)
-loglik_model5 <- compute_log_likelihood(model5)
-
-aic_model1 <- compute_aic(model1)
-aic_model2 <- compute_aic(model2)
-aic_model3 <- compute_aic(model3)
-aic_model4 <- compute_aic(model4)
-aic_model5 <- compute_aic(model5)
-
-bic_model1 <- compute_bic(model1)
-bic_model2 <- compute_bic(model2)
-bic_model3 <- compute_bic(model3)
-bic_model4 <- compute_bic(model4)
-bic_model5 <- compute_bic(model5)
-
-# Set smaller margins for the plots
-par(mar = c(4, 4, 2, 1))
-
-# Create and display Q-Q plots
-create_qq_plot(model1, "Model 1")
-create_qq_plot(model2, "Model 2")
-create_qq_plot(model3, "Model 3")
-create_qq_plot(model4, "Model 4")
-create_qq_plot(model5, "Model 5")
-#Task 3.1 --Posteririor Distribution histogram:
-# Load the required libraries
-library(dplyr)
-
-# Load the CSV file
-data <- read.csv("customer_shopping_data.csv")
-
+# Calculate the number of days since a reference date
+data$days_since_reference <- as.numeric(data$invoice_date - min(data$invoice_date))
 # Define the model (Model 4)
-model <- lm(quantity ~ I(price^2) + I(price^13) + I(price^34) + 1, data)
+model <-lm(quantity ~ I(price^2) + I(age^3) + I(quantity^4) + I(age^4) + as.factor(gender) 
+           + as.factor(category) + as.factor(shopping_mall) + I(days_since_reference) + 1 , data)
 
 # Function to compute the model's RSS
 compute_rss <- function(model) {
@@ -481,7 +363,8 @@ for (i in 1:num_samples) {
   params <- c(param1, fixed_params[1], param2, fixed_params[2])
   
   # Create a new model with the generated parameters
-  new_model <- lm(quantity ~ I(price^2) + I(price^13) + I(price^34) + 1, data, start = params)
+  new_model <- lm(quantity ~ I(price^2) + I(age^3) + I(quantity^4) + I(age^4) + as.factor(gender) 
+                  + as.factor(category) + as.factor(shopping_mall) + I(days_since_reference) + 1, data, start = params)
   
   # Compute the RSS for the new model
   new_rss <- compute_rss(new_model)
@@ -502,15 +385,34 @@ hist(param2_samples, main = "Posterior Distribution of Parameter 2")
 # Load the required libraries
 library(ggplot2)
 
-# Load the CSV file (replace 'your_data.csv' with your actual data file)
+# Load the CSV file 
 data <- read.csv("customer_shopping_data.csv")
 
-# Define the models
-model1 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^24) + I(price^14) + 1, data)
-model2 <- lm(quantity ~ I(price^4) + I(price^13) + I(price^34) + 1, data)
-model3 <- lm(quantity ~ I(price^33) + I(price^34) + 1, data)
-model4 <- lm(quantity ~ I(price^2) + I(price^13) + I(price^34) + 1, data)
-model5 <- lm(quantity ~ I(price^4) + I(price^12) + I(price^13) + I(price^34) + 1, data)
+# Convert invoice_date to a date-time format
+data$invoice_date <- as.Date(data$invoice_date)
+
+# Calculate the number of days since a reference date
+data$days_since_reference <- as.numeric(data$invoice_date - min(data$invoice_date))
+
+# Model 1
+model1 <- lm(quantity ~ I(price^4) + I(age^2) + I(age^3) + I(quantity^4) + I(price^4) 
+             + as.factor(gender) + as.factor(category) + as.factor(shopping_mall) + I(days_since_reference^4) + 1, data=data)
+
+# Model 2
+model2 <- lm(quantity ~ I(price^4) + I(age^3) + I(quantity^4) + as.factor(gender)
+             + as.factor(category) + as.factor(shopping_mall) + I(days_since_reference^4) + 1, data=data)
+
+# Model 3
+model3 <- lm(quantity ~ I(age^3) + I(quantity^4) + as.factor(gender) + as.factor(category) 
+             + as.factor(shopping_mall) + I(days_since_reference^4) + 1, data=data)
+
+# Model 4
+model4 <- lm(quantity ~ I(price^2) + I(age^3) + I(quantity^4) + as.factor(gender) + as.factor(category) 
+             + as.factor(shopping_mall) + I(days_since_reference^4) + 1, data=data)
+
+# Model 5
+model5 <- lm(quantity ~ I(price^4) + I(age^2) + I(age^3) + I(quantity^4) + as.factor(gender) 
+             + as.factor(category) + as.factor(shopping_mall) + I(days_since_reference^4) + 1, data=data)
 
 # Compute RSS values for each model
 RSS_model1 <- sum(model1$residuals^2)
@@ -546,7 +448,9 @@ for (rss_model in RSS_values) {
     # Assuming Model 4 as an example, modify for other models
     # Create a new model with the generated parameters
     # Use your model formula here
-    new_model <- lm(quantity ~ I(price^2) + I(price^13) + I(price^34) + 1, data, start = c(param1, param2))
+    new_model <- lm(quantity ~ I(price^2) + I(age^3) + I(quantity^4) + as.factor(gender) 
+                    + as.factor(category) + as.factor(shopping_mall) +
+                      I(days_since_reference^4) + 1, data, start = c(param1, param2))
     
     # Compute the RSS for the new model
     new_RSS <- sum(new_model$residuals^2)
